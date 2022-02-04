@@ -1,0 +1,13 @@
+# HELP http_requests_current The current http server requests.
+# TYPE http_requests_current gauge
+http_requests_current{code="200"} %d
+http_requests_current{code="404"} %d
+http_requests_current{code="500"} %d
+
+# HELP sessions_current The current active sessions.
+# TYPE sessions_current gauge
+sessions_current %d
+
+# HELP errors_total The total number of errors.
+# TYPE errors_total counter
+errors_total %d

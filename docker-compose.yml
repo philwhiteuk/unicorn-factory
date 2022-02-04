@@ -1,0 +1,25 @@
+version: "3.8"
+services:
+  app:
+    image: node:17.4.0-slim
+    command: [ "node", "/usr/src/app/index.js" ]
+    environment:
+      - PORT=8080
+      - ERRORS_FREQUENCY_SECS=4
+    volumes: [ "./app:/usr/src/app:ro" ]
+    expose: [ "8080" ]
+  load:
+    image: loadimpact/k6
+    command: [ "run", "--vus", "10", "--duration", "30m", "/test.js" ]
+    volumes: [ "./load/test.js:/test.js:ro" ]
+  monitoring:
+    image: prom/prometheus
+    volumes: [ "./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro" ]
+    expose: [ "9090" ]
+  visualisation:
+    image: grafana/grafana-oss
+    command: [ "--config", "/usr/share/grafana/conf/demo.ini" ]
+    volumes:
+    - "./visualisation/grafana.ini:/usr/share/grafana/conf/demo.ini:ro"
+    - "./visualisation/datasources.yml:/usr/share/grafana/conf/provisioning/datasources/demo.yml:ro"
+    ports: [ "3000:3000" ]
